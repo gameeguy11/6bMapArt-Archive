@@ -1,67 +1,72 @@
-# 6bMapArt Archive
+# Maparts Link
 
-Home of the **6bMapArts** project — the mapart community's website at
-**[6b-maparts.com](https://6b-maparts.com)**, the Maparts Link Minecraft mod,
-and the Discord gallery archive tooling.
+A Fabric mod that uploads your maparts to
+**[6b-maparts.com](https://6b-maparts.com)** straight from the game. Stand in
+front of the wall, run one command, done — no screenshots, no cropping.
 
-| Path | What it is |
-| --- | --- |
-| [`mc1.21.4-1.21.11/`](mc1.21.4-1.21.11) | **Maparts Link** mod for Minecraft 1.21.4 – 1.21.11 (Java 21) |
-| [`mc26.1+/`](mc26.1+) | **Maparts Link** mod for Minecraft 26.2 – 26.3 (Java 25) |
+## Install
 
-**Status (Oct 2026):** website live at
-[6b-maparts.com](https://6b-maparts.com) with the full gallery archive · mod
-complete and in use.
+1. Install [Fabric Loader](https://fabricmc.net/use/) and the
+   [Fabric API](https://modrinth.com/mod/fabric-api) mod for your Minecraft
+   version.
+2. Download the jar for your Minecraft version from the
+   [Releases page](../../releases).
+3. Drop it in your `mods/` folder and start the game.
 
----
+| Release tag | For Minecraft | Java |
+| --- | --- | --- |
+| `mc1.21.4-1.21.11-v…` | 1.21.4 – 1.21.11 | 21 |
+| `mc26.1+-v…` | 26.2 – 26.3 | 25 |
 
-## Maparts Link (the mod)
+Client-side only — nothing to install on a server, nothing to configure.
 
-Client-side Fabric mod for the 6bMapArts mapart community: sign in to the
-website from in-game and upload framed maparts straight off the wall. The
-backend URL is compiled in — releases point at
-[6b-maparts.com](https://6b-maparts.com) (local development targets `wrangler
-dev`). Players install the jar and go; there is nothing to configure.
+## How to use
 
-### Downloads
+**1. Link your account (one time).** On
+[6b-maparts.com](https://6b-maparts.com), open the login page and pick
+**Link Minecraft** — you get a code. In game, run `/maplink <code>`. First
+time, this also creates your account (the site walks you through setting a
+password). After that you stay linked.
 
-Grab the jar for your Minecraft version from the
-[Releases page](../../releases). Each release attaches one jar per
-supported Minecraft version:
-
-| Folder | Minecraft version | Fabric Loader | Java |
-| --- | --- | --- | --- |
-| [`mc1.21.4-1.21.11/`](mc1.21.4-1.21.11) | 1.21.4 – 1.21.11 | ≥ 0.16.0 | 21 |
-| [`mc26.1+/`](mc26.1+) | 26.2 – 26.3 | ≥ 0.19.3 | 25 |
-
-Drop the matching jar into your `mods/` folder alongside Fabric API.
-
-The ranges are the declared Fabric dependency constraint, not a
-per-version test matrix — each jar is built once against its folder's own
-mappings, so versions past the pin aren't individually verified.
+**2. Upload a mapart.** Look at a mapart wall on 6b6t and run `/mapupload`.
+The mod reads the maps right out of the item frames and uploads the image to
+the site as a draft — publish it there.
 
 ### Commands
 
 | Command | What it does |
 | --- | --- |
-| `/maplink <code>` | Confirms a sign-in code from the website's login page. First use creates your account; it also stores an upload token in `config/maparts-link.token` so you stay linked. |
-| `/mapupload [title]` | Uploads the mapart wall or floor under your crosshair as a draft (flood-fills the full rectangle). Without a title, one is guessed from the maps' custom item names ("Sunset (3/6)" → "Sunset"). |
-| `/mapselect` | Two-corner selection: run it looking at one corner frame, then at the opposite corner (the same frame twice = a 1x1), then `/mapupload`. |
-| `/mapuploadall` | Splits a wall holding several maparts into separate arts automatically — matching map names group first, unnamed neighbors stay together only when the image continues across the frame seam — and uploads each as its own draft (≤12 per run; irregular groups are skipped with a note). |
+| `/maplink <code>` | Link the game to the site (creates your account the first time). |
+| `/mapupload [title]` | Upload the mapart you're looking at. Title optional — guessed from the map names if left off. |
+| `/mapselect` | Upload just part of a wall: pick two opposite corners, then `/mapupload`. |
+| `/mapuploadall` | A wall holding several maparts? Splits them up and uploads each one separately. |
 
-Wall- and floor-mounted item frames are both supported (ceiling frames
-aren't — an "up" grid has no clear top edge to read the image from). For a
-floor grid, column runs east and row runs south, as if viewed from directly
-above with north at the top.
+### Good to know
 
-Trade proposals ping you in chat: a summary shortly after joining and a
-notification when a new one arrives, rate-limited to at most once a minute,
-with clickable links to the site.
+- Uploads work on **6b6t** (`6b6t.org` and its alt addresses); the upload
+  commands are disabled on other servers.
+- Wall and floor item frames both work; ceiling frames don't.
+- If the exact same mapart is already on the site, you're simply added as an
+  owner of it — no duplicate is created.
+- New trades on the site ping you in chat.
+- The mod checks for updates on its own — it asks before installing
+  anything.
 
-The mod checks for a newer release on the title screen. If one's available,
-it asks before installing anything — accepting downloads and swaps in the
-new jar (effective after restarting Minecraft); declining just dismisses the
-prompt for that launch.
+## Credits
+
+The Maparts Link mod builds on the original client mod by **BbiBelle**,
+creator of the previous 6b6t mapart website. This project is owned and
+maintained by **Gamerguy11** and **ComicSquid74273**.
+
+## License
+
+[MIT](LICENSE) — Copyright (c) 2026 Gamerguy11, ComicSquid74273; original
+mod work Copyright (c) 2026 BbiBelle.
+
+---
+
+<details>
+<summary>How uploads work, building, and releasing (for maintainers)</summary>
 
 ### Uploads, exactly
 
@@ -85,9 +90,15 @@ If an upload step (draft, image PUT, or finalize) fails, it's retried once
 automatically after a 5-second delay before being reported as failed — in
 both single and bulk (`/mapuploadall`) uploads.
 
----
+For a floor grid, column runs east and row runs south, as if viewed from
+directly above with north at the top.
 
-## Building
+The version ranges in the table above are the declared Fabric dependency
+constraint, not a per-version test matrix — each jar is built once against
+its folder's own mappings, so versions past the pin aren't individually
+verified.
+
+### Building
 
 ```bash
 cd mc1.21.4-1.21.11   # or mc26.1+
@@ -98,7 +109,7 @@ The jar lands in `<folder>/build/libs/maparts-link-<version>.jar`. Gradle
 needs a JDK with a compiler — on a JRE-only machine the foojay toolchain
 resolver downloads one, or install it yourself.
 
-## Releasing
+### Releasing
 
 Each Minecraft version range is released **independently** — its own tag,
 its own GitHub Release, its own single jar. Tags are named
@@ -125,14 +136,4 @@ you're actually shipping.
    from the commits touching that folder since its own last release, so
    changes to the other variant never show up in the wrong changelog.
 
-## Credits
-
-The Maparts Link mod builds on the original client mod by **BbiBelle**,
-creator of the previous 6b6t mapart website. This project (the archive,
-the upcoming website, and ongoing mod development) is owned and maintained
-by **Gamerguy11** and **ComicSquid74273**.
-
-## License
-
-[MIT](LICENSE) — Copyright (c) 2026 Gamerguy11, ComicSquid74273; original
-mod work Copyright (c) 2026 BbiBelle.
+</details>
