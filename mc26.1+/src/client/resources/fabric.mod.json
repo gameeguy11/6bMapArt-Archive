@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "maparts_link",
+  "version": "1.12.0",
+  "name": "Maparts Link",
+  "description": "Links your in-game Minecraft identity to your 6bMapArts website account (/maplink <code>) and uploads framed maparts to the site as drafts (/mapselect + /mapupload, /mapuploadall for whole walls).",
+  "authors": ["Gamerguy11", "ComicSquid74273"],
+  "contributors": ["BbiBelle (original mod, previous 6b6t mapart website)"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.maparts.link.MapartsLinkMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": ">=26.2 <26.4",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

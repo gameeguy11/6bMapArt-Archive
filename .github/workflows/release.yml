@@ -1,0 +1,90 @@
+name: Release
+
+# Tags are per-variant: <variant-dir>-v<version>, e.g. mc1.21.4-1.21.11-v1.6.1
+# or mc26.1+-v1.6.2. Each push builds and releases ONLY that one variant.
+on:
+  push:
+    tags:
+      - 'mc*-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve variant from tag
+        id: variant
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          dir="${tag%%-v*}"
+          if [ ! -d "$dir" ]; then
+            echo "Tag '$tag' doesn't map to a known variant directory ('$dir' not found)" >&2
+            exit 1
+          fi
+          case "$dir" in
+            mc1.21.4-1.21.11) java=21 ;;
+            mc26.1+) java=25 ;;
+            *)
+              echo "No Java version configured for variant directory: $dir" >&2
+              exit 1
+              ;;
+          esac
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          echo "mc=${dir#mc}" >> "$GITHUB_OUTPUT"
+          echo "java=$java" >> "$GITHUB_OUTPUT"
+
+      - name: Build release notes (scoped to this variant's directory)
+        id: notes
+        run: |
+          set -euo pipefail
+          dir="${{ steps.variant.outputs.dir }}"
+          prev="$(git tag --list "${dir}-v*" --sort=-v:refname | grep -v -x -- "${GITHUB_REF_NAME}" | head -n1 || true)"
+          {
+            echo "body<<NOTES_EOF"
+            if [ -n "$prev" ]; then
+              echo "Changes for \`$dir\` since \`$prev\`:"
+              echo
+              git log "$prev..HEAD" --pretty=format:'- %s (%h)' -- "$dir"
+            else
+              echo "First release for \`$dir\`."
+            fi
+            echo
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.variant.outputs.java }}
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        working-directory: ${{ steps.variant.outputs.dir }}
+        run: ./gradlew build --no-daemon
+
+      - name: Collect release jar
+        working-directory: ${{ steps.variant.outputs.dir }}
+        run: |
+          set -euo pipefail
+          jar="$(find build/libs -maxdepth 1 -name '*.jar' \
+            ! -name '*-sources.jar' ! -name '*-dev.jar' -print -quit)"
+          if [ -z "$jar" ]; then
+            echo "No release jar found in build/libs" >&2
+            exit 1
+          fi
+          base="$(basename "$jar" .jar)"
+          cp "$jar" "$GITHUB_WORKSPACE/${base}-mc${{ steps.variant.outputs.mc }}.jar"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: ${{ steps.notes.outputs.body }}
+          files: '*.jar'

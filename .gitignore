@@ -1,0 +1,46 @@
+# Build outputs
+build/
+.gradle/
+out/
+bin/
+
+# Never again
+*.zip
+
+# Fabric/Loom dev run environment (./gradlew runClient). Not just build
+# clutter: it's where a locally-tested mod instance persists
+# config/maparts-link.token — a live upload credential for whatever account
+# was linked during testing (see TokenStore.java) — and must never end up in
+# a public commit.
+run/
+
+# Claude Code local settings
+.claude/
+
+# Website source: LOCAL ONLY, never published (user decision 2026-10-23).
+# The whole folder — incl. scripts/ (import + deploy tooling), secrets
+# (.dev.vars, .team-accounts.txt), .triage manifests, and build output.
+website/
+.wrangler/
+
+# Project docs — local-only too (user decision 2026-10-23): the website plan
+# and this AI-context file describe the site's design and must not be public.
+/PLAN.md
+/AGENTS.md
+
+# Discord archive tooling: local only, never published (collection is done;
+# holds the bot token in .env and scraped content in data/ + dce/)
+scraper/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.launch
+.classpath
+.project
+.settings/
