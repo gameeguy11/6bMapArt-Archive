@@ -6,6 +6,7 @@
   "description": "Links your in-game Minecraft identity to your 6bMapArts website account (/maplink <code>) and uploads framed maparts to the site as drafts (/mapselect + /mapupload, /mapuploadall for whole walls).",
   "authors": ["Gamerguy11", "ComicSquid74273"],
   "contributors": ["BbiBelle (original mod, previous 6b6t mapart website)"],
+  "icon": "assets/maparts_link/icon.png",
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
