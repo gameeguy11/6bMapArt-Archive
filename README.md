@@ -9,8 +9,9 @@ front of the wall, run one command, done — no screenshots, no cropping.
 1. Install [Fabric Loader](https://fabricmc.net/use/) and the
    [Fabric API](https://modrinth.com/mod/fabric-api) mod for your Minecraft
    version.
-2. Download the jar for your Minecraft version from the
-   [Releases page](../../releases).
+2. Download the jar for your Minecraft version from
+   **[CurseForge](https://www.curseforge.com/minecraft/mc-mods/maparts-link)**
+   or the [GitHub Releases](../../releases) page.
 3. Drop it in your `mods/` folder and start the game.
 
 | Release tag | For Minecraft | Java |
@@ -49,8 +50,6 @@ the site as a draft — publish it there.
 - If the exact same mapart is already on the site, you're simply added as an
   owner of it — no duplicate is created.
 - New trades on the site ping you in chat.
-- The mod checks for updates on its own — it asks before installing
-  anything.
 
 ## Credits
 
