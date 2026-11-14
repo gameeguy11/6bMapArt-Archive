@@ -4,6 +4,8 @@ A Fabric mod that uploads your maparts to
 **[6b-maparts.com](https://6b-maparts.com)** straight from the game. Stand in
 front of the wall, run one command, done — no screenshots, no cropping.
 
+## Download: [CurseForge](https://www.curseforge.com/minecraft/mc-mods/maparts-link) · [GitHub Releases](../../releases)
+
 ## Install
 
 1. Install [Fabric Loader](https://fabricmc.net/use/) and the
